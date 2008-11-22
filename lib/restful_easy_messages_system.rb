@@ -52,11 +52,10 @@ module ProtonMicro
                    :conditions => "sender_deleted IS NULL",
                    :order => "created_at DESC"
           
-          # FIXME : true is not valid with sqlite3 (should be 't'). 
           has_many :trashbin_messages,  
                    :class_name => "Message", 
                    :foreign_key => "receiver_id",
-                   :conditions => "receiver_deleted = true and receiver_purged IS NULL",
+                   :conditions => ["receiver_deleted = ? and receiver_purged IS NULL", true],
                    :order => "created_at DESC"
 
           include ProtonMicro::RestfulEasyMessages::Messages::InstanceMethods
