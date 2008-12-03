@@ -43,19 +43,19 @@ module ProtonMicro
           has_many :inbox_messages,  
                    :class_name => "Message", 
                    :foreign_key => "receiver_id",
-                   :conditions => "receiver_deleted IS NULL",
+                   :conditions => ["receiver_deleted = ?", false],
                    :order => "created_at DESC"
                    
           has_many :outbox_messages,  
                    :class_name => "Message", 
                    :foreign_key => "sender_id",
-                   :conditions => "sender_deleted IS NULL",
+                   :conditions => ["sender_deleted = ?", false],
                    :order => "created_at DESC"
           
           has_many :trashbin_messages,  
                    :class_name => "Message", 
                    :foreign_key => "receiver_id",
-                   :conditions => ["receiver_deleted = ? and receiver_purged IS NULL", true],
+                   :conditions => ["receiver_deleted = ? and receiver_purged = ?", true, false],
                    :order => "created_at DESC"
 
           include ProtonMicro::RestfulEasyMessages::Messages::InstanceMethods
