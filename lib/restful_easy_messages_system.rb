@@ -12,7 +12,8 @@ module ProtonMicro
         
           has_many :messages_as_sender,    
                    :class_name => "Message", 
-                   :foreign_key => "sender_id"
+                   :foreign_key => "sender_id",
+                   :conditions => { :draft => false }
           
           has_many :messages_as_receiver,  
                    :class_name => "Message", 
@@ -49,7 +50,7 @@ module ProtonMicro
           has_many :outbox_messages,  
                    :class_name => "Message", 
                    :foreign_key => "sender_id",
-                   :conditions => ["sender_deleted = ?", false],
+                   :conditions => ["sender_deleted = ? AND draft = ?", false, false],
                    :order => "created_at DESC"
           
           has_many :trashbin_messages,  
@@ -57,6 +58,11 @@ module ProtonMicro
                    :foreign_key => "receiver_id",
                    :conditions => ["receiver_deleted = ? and receiver_purged = ?", true, false],
                    :order => "created_at DESC"
+
+          has_many :draft_messages,
+                   :class_name => "Message",
+                   :foreign_key => "sender_id",
+                   :conditions => ["sender_deleted = ? AND draft = ?", false, true]
 
           include ProtonMicro::RestfulEasyMessages::Messages::InstanceMethods
         end
